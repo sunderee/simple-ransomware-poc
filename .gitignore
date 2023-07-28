@@ -1,0 +1,18 @@
+# IDEs
+.idea
+.vscode
+*.iml
+
+# macOS
+.DS_Store
+
+# Virtual environments
+venv
+
+# Python-related
+__pycache__
+
+# Miscellaneous
+sample/
+*.zip
+*.pem
